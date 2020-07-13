@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.modo.sensitive.dao.SensitiveWordStrategyRelMapper">
+    <resultMap id="BaseResultMap" type="cn.modo.sensitive.pojo.SensitiveWordStrategyRel">
+        <constructor>
+            <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="sensitive_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="strategy_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, sensitive_id, strategy_id, create_time, update_time
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from md_sensitive_strategy_rel
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="findByStrategy" resultType="cn.modo.sensitive.pojo.Words">
+        SELECT sw.sensitive_word words,
+               s.strategy_key    type
+        FROM md_sensitive_strategy_rel AS ssr
+                 INNER JOIN md_sensitive_word AS sw ON ssr.sensitive_id = sw.id
+                 INNER JOIN md_strategy AS s ON ssr.strategy_id = s.id
+        WHERE sw.delete_flag = 0
+          AND s.id = #{strategyId}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from md_sensitive_strategy_rel
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="cn.modo.sensitive.pojo.SensitiveWordStrategyRel">
+        insert into md_sensitive_strategy_rel (id, sensitive_id, strategy_id,
+                                               create_time, update_time)
+        values (#{id,jdbcType=INTEGER}, #{sensitiveId,jdbcType=INTEGER}, #{strategyId,jdbcType=INTEGER},
+                #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="cn.modo.sensitive.pojo.SensitiveWordStrategyRel">
+        insert into md_sensitive_strategy_rel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="sensitiveId != null">
+                sensitive_id,
+            </if>
+            <if test="strategyId != null">
+                strategy_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="sensitiveId != null">
+                #{sensitiveId,jdbcType=INTEGER},
+            </if>
+            <if test="strategyId != null">
+                #{strategyId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="cn.modo.sensitive.pojo.SensitiveWordStrategyRel">
+        update md_sensitive_strategy_rel
+        <set>
+            <if test="sensitiveId != null">
+                sensitive_id = #{sensitiveId,jdbcType=INTEGER},
+            </if>
+            <if test="strategyId != null">
+                strategy_id = #{strategyId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="cn.modo.sensitive.pojo.SensitiveWordStrategyRel">
+        update md_sensitive_strategy_rel
+        set sensitive_id = #{sensitiveId,jdbcType=INTEGER},
+            strategy_id  = #{strategyId,jdbcType=INTEGER},
+            create_time  = #{createTime,jdbcType=TIMESTAMP},
+            update_time  = #{updateTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

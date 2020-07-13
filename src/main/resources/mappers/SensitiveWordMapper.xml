@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.modo.sensitive.dao.SensitiveWordMapper">
+    <resultMap id="BaseResultMap" type="cn.modo.sensitive.pojo.SensitiveWord">
+        <constructor>
+            <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="sensitive_word" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="create_time" javaType="java.lang.String" jdbcType="TIMESTAMP"/>
+            <arg column="update_time" javaType="java.lang.String" jdbcType="TIMESTAMP"/>
+            <arg column="delete_flag" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="word_type" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        </constructor>
+    </resultMap>
+
+    <select id="getKeyword" resultType="cn.modo.sensitive.pojo.Words">
+        SELECT
+        msw.sensitive_word AS words,
+        msw.word_type AS type,
+        mg.id AS gameId,
+        mssr.strategy_id strategy
+        FROM
+        md_sensitive_word AS msw
+        LEFT JOIN md_game_sensitive_rel AS mgsr ON msw.id = mgsr.sensitive_id
+        LEFT JOIN md_game AS mg ON mgsr.game_id = mg.id
+        LEFT JOIN md_sensitive_strategy_rel AS mssr ON mssr.sensitive_id = msw.id
+        WHERE
+        msw.delete_flag = 0
+        AND mssr.strategy_id is not NULL
+        <if test="type != null and '' != type ">
+            AND msw.word_type = #{type,jdbcType=INTEGER}
+        </if>
+        <if test="gameId != null and '' != gameId ">
+            and mg.game_id=#{gameId,jdbcType=VARCHAR}
+        </if>
+
+    </select>
+    <select id="findAll" resultType="cn.modo.sensitive.pojo.SensitiveWord">
+        SELECT
+        msw.id,
+        msw.sensitive_word sensitiveWord,
+        msw.create_time createTime,
+        msw.update_time updateTime,
+        msw.word_type type
+        FROM
+        md_sensitive_word AS msw
+        INNER JOIN md_sensitive_strategy_rel AS mstr ON msw.id = mstr.sensitive_id
+        where delete_flag = 0
+        and mstr.strategy_id = #{strategy,jdbcType=INTEGER}
+        <if test=" wordType != null and ''  != wordType ">
+            and msw.word_type = #{wordType}
+        </if>
+        <if test="keyword != null and '' != keyword ">
+            and instr(msw.sensitive_word,#{keyword})
+        </if>
+
+    </select>
+    <select id="findByName" resultMap="BaseResultMap">
+        select id,
+        sensitive_word,
+        word_type,
+        create_time,
+        update_time
+        from md_sensitive_word
+        where delete_flag = 0
+        <if test="name != null and '' != name">
+            and sensitive_word = #{name}
+        </if>
+    </select>
+    <select id="selectByParamKey" resultMap="BaseResultMap">
+        select id,
+               sensitive_word,
+               word_type,
+               create_time,
+               update_time
+        from md_sensitive_word
+        where delete_flag = 0
+          and id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <insert id="insert" parameterType="cn.modo.sensitive.pojo.SensitiveWord">
+        insert into md_sensitive_word (id, sensitive_word, create_time,
+                                       update_time, delete_flag)
+        values (#{id,jdbcType=INTEGER}, #{sensitiveWord,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+                #{updateTime,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=INTEGER})
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="cn.modo.sensitive.pojo.SensitiveWord">
+        update md_sensitive_word
+        <set>
+            <if test="sensitiveWord != null">
+                sensitive_word = #{sensitiveWord,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateDeleteFlag">
+        update md_sensitive_word
+        <set>
+            delete_flag= 1
+        </set>
+        where id in
+        <if test=" list != null and list.size > 0 ">
+            <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+    </update>
+</mapper>

@@ -1,0 +1,18 @@
+spring:
+  redis:
+    host: 192.168.1.154
+    password: redis123456
+    port: 6379
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.1.154:33067/modo_sensitive?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false
+    username: root
+    password: 123456
+  application:
+    name: sensitivewd-server
+server:
+  port: 8686
+mybatis:
+  mapper-locations: classpath*:mappers/**/*.xml
+  type-aliases-package: cn.modo.sensitive.pojo
+env: dev

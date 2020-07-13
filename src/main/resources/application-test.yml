@@ -1,0 +1,15 @@
+server:
+  port: 8686
+  max-http-header-size: 10000000
+spring:
+  datasource:
+    url: jdbc:mysql://115.159.24.145:3306/modo_sensitive?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: Modo1030!@#
+    hikari:
+      maximum-pool-size: 200
+User: #跟用户系统交互 所需的域名
+  url:
+    DNS: http://mdusersertest.modogame.com
+env: test

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.modo.sensitive.dao.GameMapper">
+    <resultMap id="BaseResultMap" type="cn.modo.sensitive.pojo.Game">
+        <constructor>
+            <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="game_id" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="game_name" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="game_desc" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, game_id, game_name, game_desc, create_time, update_time
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from md_game
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="findByGameId" resultType="cn.modo.sensitive.pojo.Game">
+        SELECT md_game.id          id,
+               md_game.game_id     gameId,
+               md_game.game_name   gameName,
+               md_game.game_desc   gameDesc,
+               md_game.create_time createTime,
+               md_game.update_time updateTime
+        FROM md_game
+        WHERE md_game.id = #{gameId,jdbcType=INTEGER}
+    </select>
+    <select id="getGameIds" resultType="java.lang.Integer">
+        SELECT md_game.id id
+        FROM md_game
+    </select>
+    <select id="queryAll" resultType="java.util.Map">
+        select id , game_name from md_game
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from md_game
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="cn.modo.sensitive.pojo.Game">
+        insert into md_game (id, game_id, game_name,
+                             game_desc, create_time, update_time)
+        values (#{id,jdbcType=INTEGER}, #{gameId,jdbcType=VARCHAR}, #{gameName,jdbcType=VARCHAR},
+                #{gameDesc,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="cn.modo.sensitive.pojo.Game">
+        insert into md_game
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="gameId != null">
+                game_id,
+            </if>
+            <if test="gameName != null">
+                game_name,
+            </if>
+            <if test="gameDesc != null">
+                game_desc,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="gameId != null">
+                #{gameId,jdbcType=VARCHAR},
+            </if>
+            <if test="gameName != null">
+                #{gameName,jdbcType=VARCHAR},
+            </if>
+            <if test="gameDesc != null">
+                #{gameDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="cn.modo.sensitive.pojo.Game">
+        update md_game
+        <set>
+            <if test="gameId != null">
+                game_id = #{gameId,jdbcType=VARCHAR},
+            </if>
+            <if test="gameName != null">
+                game_name = #{gameName,jdbcType=VARCHAR},
+            </if>
+            <if test="gameDesc != null">
+                game_desc = #{gameDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="cn.modo.sensitive.pojo.Game">
+        update md_game
+        set game_id     = #{gameId,jdbcType=VARCHAR},
+            game_name   = #{gameName,jdbcType=VARCHAR},
+            game_desc   = #{gameDesc,jdbcType=VARCHAR},
+            create_time = #{createTime,jdbcType=TIMESTAMP},
+            update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>
