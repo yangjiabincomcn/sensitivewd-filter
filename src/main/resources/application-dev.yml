@@ -4,10 +4,7 @@ spring:
     password: redis123456
     port: 6379
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.1.154:33067/modo_sensitive?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false
-    username: root
-    password: 123456
+
   application:
     name: sensitivewd-server
 server:
